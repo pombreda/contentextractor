@@ -25,4 +25,8 @@ get '/extract' => sub {
     return 'Error fetching url';
 };
 
+get '/test' => sub {
+    return request->uri_base;
+};
+
 true;
