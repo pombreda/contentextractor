@@ -11,13 +11,13 @@ get '/' => sub {
 };
 
 get '/extract' => sub {
-    my $extractor = HTML::ContentExtractor->new();
-    my $agent=LWP::UserAgent->new;
+    my $extractor = HTML::ContentExtractor->new;
+    my $agent = LWP::UserAgent->new;
 
-    my $url=params->{'url'};
+    my $url = params->{'url'};
 
     if ($url =~ /$RE{URI}{HTTP}/) {
-        my $res=$agent->get($url);
+        my $res = $agent->get($url);
         my $HTML = $res->decoded_content();
         $extractor->extract($url, $HTML);
         return $extractor->as_html();
@@ -26,7 +26,8 @@ get '/extract' => sub {
 };
 
 get '/test' => sub {
-    return request->uri_base;
+    use Data::Dumper;
+    return Dumper request;
 };
 
 true;
