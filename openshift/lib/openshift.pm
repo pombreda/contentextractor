@@ -1,10 +1,12 @@
 package openshift;
+use strict;
 use HTML::ContentExtractor;
 use LWP::UserAgent;
 use Regexp::Common qw /URI/;
+use HTML::ResolveLink;
 use Dancer ':syntax';
 
-our $VERSION = '0.2';
+our $VERSION = '0.3';
 
 get '/' => sub {
     template 'index';
@@ -17,10 +19,13 @@ get '/extract' => sub {
     my $url = params->{'url'};
 
     if ($url =~ /$RE{URI}{HTTP}/) {
+        my $base = request->uri_base;
         my $res = $agent->get($url);
-        my $HTML = $res->decoded_content();
-        $extractor->extract($url, $HTML);
-        return $extractor->as_html();
+        $extractor->extract($url, $res->decoded_content());
+        my $html = $extractor->as_html();
+        # make relative links absolute
+        my $resolver = HTML::ResolveLink->new(base => $url);
+        return $resolver->resolve($html);
     }
     return 'Error fetching url';
 };

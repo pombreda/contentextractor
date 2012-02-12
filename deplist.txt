@@ -4,4 +4,5 @@ Dancer
 Plack::Handler::Apache2
 HTML::ContentExtractor
 Regexp::Common::URI::http
+HTML::ResolveLink
 
